@@ -1,6 +1,9 @@
 package lru
 
-import "time"
+import (
+	"math/rand"
+	"time"
+)
 
 type node struct {
 	key   string
@@ -127,5 +130,20 @@ func (m *Map) trim() {
 	}
 	for m.size >= m.cap {
 		m.Delete(m.tail.key)
+	}
+
+	if rand.Float32()<.2{
+		m.fullTrim()
+	}
+}
+
+func init(){
+	rand.Seed(time.Now().UnixNano())
+}
+func( m *Map) fullTrim(){
+	for key,node :=range m.cache{
+		if node.expire>0 && time.Since(node.setup)>node.expire{
+			m.Delete(key)
+		}
 	}
 }

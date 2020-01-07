@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 	"testing"
+	"time"
 )
 
 func Test(t *testing.T) {
@@ -31,4 +32,18 @@ func TestLRU(t *testing.T) {
 			}
 		}
 	}
+}
+
+func TestLRU_Expire(t *testing.T){
+	m := NewMap(10)
+	k0,v0 := "k","v"
+
+	m.Set(k0,v0,time.Millisecond)
+	time.Sleep(time.Second)
+
+	_,ok :=m.Get(k0)
+	if ok{
+		t.FailNow()
+	}
+
 }
